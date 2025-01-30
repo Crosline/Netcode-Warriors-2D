@@ -1,0 +1,17 @@
+*.jpg -delta
+*.jpeg -delta
+*.png -delta
+*.tga -delta
+*.bmp -delta
+*.gif -delta
+*.psd -delta
+*.tif -delta
+*.tiff -delta
+
+*.mp4 -delta
+*.mov -delta
+
+*.jar -delta
+*.zip -delta
+*.7z -delta
+*.unitypackage -delta
