@@ -1,0 +1,18 @@
+﻿{
+  "name": "Game.Editor",
+  "rootNamespace": "Game.Editor",
+  "references": [
+    "Serializables"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": true,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
