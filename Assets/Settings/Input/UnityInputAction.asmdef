@@ -1,10 +1,7 @@
 {
-    "name": "Game",
-    "rootNamespace": "Game",
+    "name": "UnityInputAction",
+    "rootNamespace": "UnityInputAction",
     "references": [
-        "Subsystems",
-        "Serializables",
-        "UnityInputAction",
         "Unity.InputSystem"
     ],
     "includePlatforms": [],
