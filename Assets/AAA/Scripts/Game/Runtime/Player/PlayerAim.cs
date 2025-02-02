@@ -43,8 +43,12 @@ namespace Game.Player.Movement
             
             
             var aimInput = GetAimInput();
+
+            var isLeft = aimInput.x < 0;
+            
             var angle = Mathf.Atan2(aimInput.y, aimInput.x) * Mathf.Rad2Deg;
-            _weaponHolderTransform.localRotation = Quaternion.Euler(0f, 0f, angle);
+            _weaponHolderTransform.localRotation = Quaternion.Euler(0f, 0f, isLeft ? angle - 180f : angle);
+            _weaponHolderTransform.localScale = new Vector3(isLeft ? -1f : 1f, 1f, 1f);
         }
 
 
