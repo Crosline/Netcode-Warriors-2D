@@ -5,7 +5,8 @@
         "Subsystems",
         "Serializables",
         "UnityInputAction",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Unity.Netcode.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
