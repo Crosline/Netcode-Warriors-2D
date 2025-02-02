@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4727219042032204939}
   - component: {fileID: 223358979576925427}
   - component: {fileID: 5517265308155506761}
+  - component: {fileID: 4966958903477259713}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -98,7 +99,7 @@ MonoBehaviour:
   InLocalSpace: 0
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
-  SlerpPosition: 1
+  SlerpPosition: 0
 --- !u!50 &223358979576925427
 Rigidbody2D:
   serializedVersion: 5
@@ -141,6 +142,20 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _rigidbody: {fileID: 223358979576925427}
   _speed: 5
+--- !u!114 &4966958903477259713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 418341959450593272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59905f79e30a4520bf9e12f2cbebb5ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  _weaponHolderTransform: {fileID: 50278746036498791}
 --- !u!1 &721546626638950899
 GameObject:
   m_ObjectHideFlags: 0
