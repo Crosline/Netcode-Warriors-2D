@@ -1,18 +1,25 @@
 using System;
 using Subsystems;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityInputAction;
 using CallbackContext = UnityEngine.InputSystem.InputAction.CallbackContext;
 
-namespace Game
+namespace Game.Input
 {
     public sealed class InputReader : GameSubsystem<InputReader>, Controls.IPlayerActions
     {
         public event Action<bool> OnPlayerPrimaryAttack;
         public event Action<bool> OnPlayerSecondaryAttack;
         public event Action<Vector2> OnPlayerMove;
-        
+        public event Action<Vector2> OnPlayerAim;
+
         private Controls _controls;
+
+        public InputType InputType { get; private set; }
+        private InputDevice _lastAimDevice;
+        public bool IsGamepadConnected => Gamepad.current != null;
+
         public override void OnAwake()
         {
             if (_controls == null)
@@ -20,7 +27,7 @@ namespace Game
                 _controls = new Controls();
                 _controls.Player.SetCallbacks(this);
             }
-            
+
             _controls.Player.Enable();
         }
 
@@ -33,6 +40,21 @@ namespace Game
         {
             var direction = context.ReadValue<Vector2>();
             OnPlayerMove?.Invoke(direction);
+        }
+
+        public void OnAim(CallbackContext context)
+        {
+            // if (context.action.activeControl.device != _lastAimDevice)
+            // {
+            //     _lastAimDevice = context.action.activeControl.device;
+            //     InputType = _lastAimDevice is Gamepad
+            //         ? InputType.Gamepad
+            //         : InputType.Keyboard;
+            // }
+            // TODO - This works but i didn't like how it won't update location without a change
+
+            var direction = context.ReadValue<Vector2>();
+            OnPlayerAim?.Invoke(direction);
         }
 
         public void OnAttack(CallbackContext context)

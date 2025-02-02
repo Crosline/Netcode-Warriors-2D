@@ -1,12 +1,11 @@
+using Game.Input;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace Game
+namespace Game.Player.Movement
 {
     public class PlayerMovement : NetworkBehaviour
     {
-        private InputReader _inputReader;
-
         [Header("Components")]
         [SerializeField]
         private Rigidbody2D _rigidbody;
@@ -14,6 +13,7 @@ namespace Game
         [Header("Settings")]
         [SerializeField] private float _speed = 5f;
 
+        private InputReader _inputReader;
 
         private Vector2 _movementInput;
 
@@ -25,14 +25,13 @@ namespace Game
 
             _rigidbody ??= GetComponent<Rigidbody2D>();
             _inputReader = InputReader.Instance;
-            Subscribe();
+            _inputReader.OnPlayerMove += OnPlayerMovement;
         }
 
         public override void OnNetworkDespawn()
         {
             if (!IsOwner) return;
-
-            UnSubscribe();
+            _inputReader.OnPlayerMove -= OnPlayerMovement;
         }
 
         #endregion
@@ -48,20 +47,5 @@ namespace Game
 
             _rigidbody.linearVelocity = _movementInput * _speed;
         }
-
-
-        #region Event Subscriptions
-
-        private void Subscribe()
-        {
-            _inputReader.OnPlayerMove += OnPlayerMovement;
-        }
-
-        private void UnSubscribe()
-        {
-            _inputReader.OnPlayerMove -= OnPlayerMovement;
-        }
-
-        #endregion
     }
 }
