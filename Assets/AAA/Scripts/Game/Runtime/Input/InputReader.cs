@@ -18,7 +18,6 @@ namespace Game.Input
 
         public InputType InputType { get; private set; }
         private InputDevice _lastAimDevice;
-        public bool IsGamepadConnected => Gamepad.current != null;
 
         public override void OnAwake()
         {
@@ -44,14 +43,13 @@ namespace Game.Input
 
         public void OnAim(CallbackContext context)
         {
-            // if (context.action.activeControl.device != _lastAimDevice)
-            // {
-            //     _lastAimDevice = context.action.activeControl.device;
-            //     InputType = _lastAimDevice is Gamepad
-            //         ? InputType.Gamepad
-            //         : InputType.Keyboard;
-            // }
-            // TODO - This works but i didn't like how it won't update location without a change
+            if (context.action.activeControl.device != _lastAimDevice)
+            {
+                _lastAimDevice = context.action.activeControl.device;
+                InputType = _lastAimDevice is Gamepad
+                    ? InputType.Gamepad
+                    : InputType.Keyboard;
+            }
 
             var direction = context.ReadValue<Vector2>();
             OnPlayerAim?.Invoke(direction);

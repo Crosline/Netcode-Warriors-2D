@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5517265308155506761}
   - component: {fileID: 4966958903477259713}
   - component: {fileID: 7750215501521964763}
+  - component: {fileID: 2864728566801948131}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -174,6 +175,25 @@ MonoBehaviour:
   UseRigidBodyForMotion: 1
   AutoUpdateKinematicState: 0
   AutoSetKinematicOnDespawn: 0
+--- !u!114 &2864728566801948131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 418341959450593272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5af9253a7a84f9a843d3e048e8c757b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  _spawnPoint: {fileID: 8905567465094522250}
+  _playerCollider: {fileID: 5644765932279599054}
+  _serverPrefab: {fileID: 7852923841242239935, guid: fb54113f9b97c3143a536e7ad7d271bd, type: 3}
+  _clientPrefab: {fileID: 7746771603421221215, guid: 8259101861dcc844f974ec24f247c0aa, type: 3}
+  _projectileSpeed: 10
+  _fireRate: 1
 --- !u!1 &721546626638950899
 GameObject:
   m_ObjectHideFlags: 0
@@ -292,6 +312,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1447679841651335177}
+  - {fileID: 8905567465094522250}
   m_Father: {fileID: 1423803468868300394}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6150003539242333742
@@ -523,3 +544,34 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!1 &4783245360801529650
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8905567465094522250}
+  m_Layer: 0
+  m_Name: ProjectileSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8905567465094522250
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4783245360801529650}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.569, y: 0.231, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 50278746036498791}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -2,7 +2,7 @@ using Game.Input;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace Game.Player.Movement
+namespace Game.Player
 {
     public class PlayerMovement : NetworkBehaviour
     {

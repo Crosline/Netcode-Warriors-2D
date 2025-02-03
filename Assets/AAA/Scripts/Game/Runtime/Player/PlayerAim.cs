@@ -1,9 +1,8 @@
-﻿using System;
-using Game.Input;
+﻿using Game.Input;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace Game.Player.Movement
+namespace Game.Player
 {
     public class PlayerAim : NetworkBehaviour
     {
@@ -42,7 +41,7 @@ namespace Game.Player.Movement
             if (!IsOwner) return;
             
             
-            var aimInput = GetAimInput();
+            var aimInput = GetAimDirection();
 
             var isLeft = aimInput.x < 0;
             
@@ -52,11 +51,8 @@ namespace Game.Player.Movement
         }
 
 
-        private Vector2 GetAimInput()
+        private Vector2 GetAimDirection()
         {
-            if (_inputReader.InputType != InputType.Keyboard)
-                return _aimInput;
-
             var direction = _camera.ScreenToWorldPoint(_aimInput) - transform.position;
             direction.z = 0f;
 
@@ -67,6 +63,20 @@ namespace Game.Player.Movement
         private void OnAim(Vector2 playerAimInput)
         {
             _aimInput = playerAimInput;
+            
+            
+            if (_inputReader.InputType == InputType.Gamepad)
+                _aimInput += transform.position.ToVector2();
         }
+    }
+    
+
+    public static class Vector2Extensions
+    {
+        public static Vector2 WithX(this Vector2 v, float x) => new Vector2(x, v.y);
+        public static Vector2 WithY(this Vector2 v, float y) => new Vector2(v.x, y);
+        
+        public static Vector2 ToVector2(this Vector3 v) => new Vector2(v.x, v.y);
+            
     }
 }
