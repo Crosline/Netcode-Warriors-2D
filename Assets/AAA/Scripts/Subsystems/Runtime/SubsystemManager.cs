@@ -39,15 +39,16 @@ namespace Subsystems.Core
         {
             Instance = new SubsystemManager();
             _cancellationTokenSource = new CancellationTokenSource();
-            _settings = Resources.Load<SubsystemManagerSettings>(nameof(SubsystemManagerSettings));
+            _settings = SubsystemManagerSettings.GetOrCreate();
 
             _subsystems = new HashSet<GameSubsystem>();
 
             foreach (var gameSubsystem in _settings.Subsystems)
             {
-                if (gameSubsystem.Type == null) continue;
+                var typeInfo = gameSubsystem.TypeInfo;
+                if (typeInfo == null) continue;
 
-                if (Activator.CreateInstance(gameSubsystem.Type) is not GameSubsystem singletonObject)
+                if (Activator.CreateInstance(typeInfo) is not GameSubsystem singletonObject)
                     continue;
 
                 if (!_subsystems.Add(singletonObject)) continue;

@@ -42,7 +42,7 @@ namespace Subsystems
     }
 
     [Serializable]
-    public class GameSubsystem : SerializableType
+    public class GameSubsystem
     {
         public virtual void Initialize()
         {
