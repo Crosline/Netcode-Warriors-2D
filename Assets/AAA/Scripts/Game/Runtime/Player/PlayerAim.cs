@@ -1,6 +1,7 @@
 ﻿using Game.Input;
 using Unity.Netcode;
 using UnityEngine;
+using SubsystemManager = Subsystems.Core.SubsystemManager;
 
 namespace Game.Player
 {
@@ -21,7 +22,8 @@ namespace Game.Player
         {
             if (!IsOwner) return;
 
-            _inputReader = InputReader.Instance;
+            // _inputReader = InputReader.Instance;
+            _inputReader = SubsystemManager.TryGetInstanceWithoutError<InputReader>();
             _inputReader.OnPlayerAim += OnAim;
 
             _camera = Camera.main;

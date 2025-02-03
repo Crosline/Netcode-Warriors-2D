@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
-using Serializables;
 using Object = UnityEngine.Object;
 
 namespace Subsystems.Core
@@ -15,8 +14,48 @@ namespace Subsystems.Core
 
         private static CancellationTokenSource _cancellationTokenSource;
 
-        private static HashSet<GameSubsystem> _subsystems;
+        private static List<Type> _subsystemTypes;
+        private static List<GameSubsystem> _subsystems;
         internal static SubsystemManager Instance { get; private set; }
+        
+        
+        public static TSubsystem TryGetInstanceWithoutError<TSubsystem>() where TSubsystem : GameSubsystem
+        {
+            try { return TryGetInstance<TSubsystem>(); }
+            catch { return null; }
+        }
+
+        public static TSubsystem TryGetInstance<TSubsystem>() where TSubsystem : GameSubsystem
+        {
+            var typeIndex = _subsystemTypes.IndexOf(typeof(TSubsystem));
+            if (typeIndex == -1)
+                throw new ArgumentException($"Subsystem of type {typeof(TSubsystem)} not found");
+            
+            return _subsystems[typeIndex] as TSubsystem;
+        }
+
+        public static bool TryRegister<TSubsystem>(TSubsystem gameSubsystem) where TSubsystem : GameSubsystem
+        {
+            return TryRegister(typeof(TSubsystem), gameSubsystem);
+        }
+
+        private static bool TryRegister(Type type, GameSubsystem gameSubsystem)
+        {
+            if (_subsystemTypes.Contains(type)) return false;
+            
+            _subsystems.Add(gameSubsystem);
+            _subsystemTypes.Add(type);
+            return true;
+        }
+        
+        public static bool TryUnregister<TSubsystem>(TSubsystem gameSubsystem) where TSubsystem : GameSubsystem
+        {
+            if (!_subsystemTypes.Contains(typeof(TSubsystem))) return false;
+
+            _subsystems.Remove(gameSubsystem);
+            _subsystemTypes.Remove(typeof(TSubsystem));
+            return true;
+        }
 
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -41,7 +80,8 @@ namespace Subsystems.Core
             _cancellationTokenSource = new CancellationTokenSource();
             _settings = SubsystemManagerSettings.GetOrCreate();
 
-            _subsystems = new HashSet<GameSubsystem>();
+            _subsystems = new List<GameSubsystem>();
+            _subsystemTypes = new List<Type>();
 
             foreach (var gameSubsystem in _settings.Subsystems)
             {
@@ -51,7 +91,8 @@ namespace Subsystems.Core
                 if (Activator.CreateInstance(typeInfo) is not GameSubsystem singletonObject)
                     continue;
 
-                if (!_subsystems.Add(singletonObject)) continue;
+                if (!TryRegister(typeInfo, singletonObject))
+                    continue;
 
                 singletonObject.Initialize();
             }
@@ -75,6 +116,9 @@ namespace Subsystems.Core
 
             _subsystems.Clear();
             _subsystems = null;
+
+            _subsystemTypes.Clear();
+            _subsystemTypes = null;
 
             if (_monoHelper != null)
                 Object.Destroy(_monoHelper.gameObject);

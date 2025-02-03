@@ -5,7 +5,7 @@ namespace Subsystems
 {
     public abstract class GameSubsystem<T> : GameSubsystem where T : GameSubsystem<T>
     {
-        public static T Instance { get; private set; }
+        static T Instance { get; set; }
 
         public override void Initialize()
         {

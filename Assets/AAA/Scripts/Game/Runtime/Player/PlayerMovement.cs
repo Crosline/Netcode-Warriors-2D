@@ -1,6 +1,7 @@
 using Game.Input;
 using Unity.Netcode;
 using UnityEngine;
+using SubsystemManager = Subsystems.Core.SubsystemManager;
 
 namespace Game.Player
 {
@@ -24,7 +25,8 @@ namespace Game.Player
             if (!IsOwner) return;
 
             _rigidbody ??= GetComponent<Rigidbody2D>();
-            _inputReader = InputReader.Instance;
+            // _inputReader = InputReader.Instance;
+            _inputReader = SubsystemManager.TryGetInstanceWithoutError<InputReader>();
             _inputReader.OnPlayerMove += OnPlayerMovement;
         }
 

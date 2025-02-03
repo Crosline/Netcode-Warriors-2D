@@ -1,6 +1,7 @@
 ﻿using Game.Input;
 using Unity.Netcode;
 using UnityEngine;
+using SubsystemManager = Subsystems.Core.SubsystemManager;
 
 namespace Game.Projectile
 {
@@ -35,7 +36,8 @@ namespace Game.Projectile
             if (!IsOwner)
                 return;
 
-            _inputReader = InputReader.Instance;
+            // _inputReader = InputReader.Instance;
+            _inputReader = SubsystemManager.TryGetInstanceWithoutError<InputReader>();
             _inputReader.OnPlayerPrimaryAttack += HandlePrimaryFire;
         }
 
