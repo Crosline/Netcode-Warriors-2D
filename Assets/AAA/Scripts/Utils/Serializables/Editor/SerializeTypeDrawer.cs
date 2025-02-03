@@ -5,18 +5,19 @@ using UnityEngine;
 
 namespace Serializables.Editor
 {
-    [CustomPropertyDrawer(typeof(SerializableType), true)]
+    [CustomPropertyDrawer(typeof(SerializableType<>), true)]
     public class SerializableTypeDrawer : PropertyDrawer
     {
-        private string[] typeNames, typeFullNames;
+        private string[] _typeNames, _typeFullNames;
 
         private void Initialize()
         {
-            if (typeFullNames != null) return;
+            if (_typeFullNames != null) return;
 
             var parentType = fieldInfo.FieldType;
-            if (parentType.IsArray)
-                parentType = parentType.GetElementType();
+            parentType = parentType.IsArray 
+                ? parentType.GetElementType()!.GetGenericArguments()[0] 
+                : parentType.GetGenericArguments()[0];
 
             var filteredTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assembly => assembly.GetTypes())
@@ -24,9 +25,9 @@ namespace Serializables.Editor
                 .ToArray();
 
 
-            typeNames = filteredTypes.Select(t => t.ReflectedType == null ? t.Name : "t.ReflectedType.Name + t.Name")
+            _typeNames = filteredTypes.Select(t => t.ReflectedType == null ? t.Name : "t.ReflectedType.Name + t.Name")
                 .ToArray();
-            typeFullNames = filteredTypes.Select(t => t.AssemblyQualifiedName).ToArray();
+            _typeFullNames = filteredTypes.Select(t => t.AssemblyQualifiedName).ToArray();
         }
 
         private static bool ParentFilter(Type type, Type parentType)
@@ -68,15 +69,15 @@ namespace Serializables.Editor
         {
             var assemblyQualifiedNameProperty = property.FindPropertyRelative("assemblyQualifiedName");
 
-            var currentIndex = Array.IndexOf(typeFullNames, assemblyQualifiedNameProperty?.stringValue ?? "");
+            var currentIndex = Array.IndexOf(_typeFullNames, assemblyQualifiedNameProperty?.stringValue ?? "");
 
-            var selectedIndex = EditorGUI.Popup(position, "", currentIndex, typeNames);
+            var selectedIndex = EditorGUI.Popup(position, "", currentIndex, _typeNames);
 
             if (assemblyQualifiedNameProperty == null) return;
 
             if (selectedIndex >= 0 && selectedIndex != currentIndex)
             {
-                assemblyQualifiedNameProperty.stringValue = typeFullNames[selectedIndex];
+                assemblyQualifiedNameProperty.stringValue = _typeFullNames[selectedIndex];
                 property.serializedObject.ApplyModifiedProperties();
             }
         }

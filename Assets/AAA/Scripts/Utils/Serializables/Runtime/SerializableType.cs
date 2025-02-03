@@ -1,45 +1,36 @@
 ﻿using System;
+using System.Reflection;
 using UnityEngine;
 
 namespace Serializables
 {
     [Serializable]
-    public class SerializableType : ISerializationCallbackReceiver
+    public class SerializableType<T> : ISerializationCallbackReceiver
     {
-        [SerializeField] private string assemblyQualifiedName = string.Empty;
+        [SerializeField]
+        private string assemblyQualifiedName = string.Empty;
 
-        public Type Type { get; private set; }
+        public TypeInfo TypeInfo;
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
-            if (Type == null) return;
-
-            assemblyQualifiedName = Type.AssemblyQualifiedName;
+            if (TypeInfo == null)
+            {
+                TypeInfo = typeof(T).GetTypeInfo();
+            }
+            
+            assemblyQualifiedName = TypeInfo.AssemblyQualifiedName;
         }
 
         void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
-            if (!TryGetType(out var type)) return;
-            Type = type;
-        }
+            if (string.IsNullOrWhiteSpace(assemblyQualifiedName)) return;
 
-        private bool TryGetType(out Type type)
-        {
-            type = Type.GetType(assemblyQualifiedName);
+            var type = Type.GetType(assemblyQualifiedName);
+            
+            if (type == null) return;
 
-            return type != null || !string.IsNullOrWhiteSpace(assemblyQualifiedName);
-        }
-
-        // Implicit conversion from SerializableType to Type
-        public static implicit operator Type(SerializableType sType)
-        {
-            return sType.Type;
-        }
-
-        // Implicit conversion from Type to SerializableType
-        public static implicit operator SerializableType(Type type)
-        {
-            return new SerializableType { Type = type };
+            TypeInfo = type.GetTypeInfo();
         }
     }
 }
