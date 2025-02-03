@@ -44,14 +44,14 @@ namespace Serializables.Editor
             Initialize();
             if (property.isArray)
             {
-                SerializeList(position, property, label);
+                SerializeList(position, property);
                 return;
             }
 
-            SerializeType(position, property, label);
+            SerializeType(position, property);
         }
 
-        private void SerializeList(Rect position, SerializedProperty property, GUIContent label)
+        private void SerializeList(Rect position, SerializedProperty property)
         {
             if (!property.isArray) return;
 
@@ -61,11 +61,11 @@ namespace Serializables.Editor
 
                 if (i > 0) position.y += EditorGUIUtility.singleLineHeight;
 
-                SerializeType(position, element, label);
+                SerializeType(position, element);
             }
         }
 
-        private void SerializeType(Rect position, SerializedProperty property, GUIContent label)
+        private void SerializeType(Rect position, SerializedProperty property)
         {
             var assemblyQualifiedNameProperty = property.FindPropertyRelative("assemblyQualifiedName");
 
@@ -75,11 +75,10 @@ namespace Serializables.Editor
 
             if (assemblyQualifiedNameProperty == null) return;
 
-            if (selectedIndex >= 0 && selectedIndex != currentIndex)
-            {
-                assemblyQualifiedNameProperty.stringValue = _typeFullNames[selectedIndex];
-                property.serializedObject.ApplyModifiedProperties();
-            }
+            if (selectedIndex < 0 || selectedIndex == currentIndex) return;
+
+            assemblyQualifiedNameProperty.stringValue = _typeFullNames[selectedIndex];
+            property.serializedObject.ApplyModifiedProperties();
         }
     }
 }

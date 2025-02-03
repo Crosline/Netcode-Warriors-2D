@@ -42,34 +42,20 @@ namespace Subsystems
     }
 
     [Serializable]
-    public class GameSubsystem
+    public abstract class GameSubsystem
     {
-        public virtual void Initialize()
-        {
-        }
+        public abstract void Initialize();
 
-        public virtual void Shutdown()
-        {
-        }
+        public abstract void Shutdown();
 
-        public virtual void OnAwake()
-        {
-        }
+        public abstract void OnAwake();
 
-        public virtual void OnDestroy()
-        {
-        }
+        public abstract void OnDestroy();
 
-        public virtual void OnApplicationQuit()
-        {
-        }
+        public abstract void OnApplicationQuit();
 
-        public virtual void OnApplicationFocus(bool hasFocus)
-        {
-        }
+        public abstract void OnApplicationFocus(bool hasFocus);
 
-        public virtual void OnApplicationPause(bool hasPaused)
-        {
-        }
+        public abstract void OnApplicationPause(bool hasPaused);
     }
 }

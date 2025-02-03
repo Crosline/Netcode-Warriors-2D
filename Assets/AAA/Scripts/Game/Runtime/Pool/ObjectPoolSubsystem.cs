@@ -1,7 +1,8 @@
-﻿namespace Game.Pooling
+﻿using Subsystems;
+
+namespace Game.Pooling
 {
-    public class ObjectPoolSubsystem
+    public class ObjectPoolSubsystem : GameSubsystem<ObjectPoolSubsystem>
     {
-        
     }
 }
