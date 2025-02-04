@@ -28,7 +28,6 @@ namespace Game.Player
 
             _camera = Camera.main;
         }
-
         public override void OnNetworkDespawn()
         {
             if (!IsOwner) return;
@@ -55,8 +54,10 @@ namespace Game.Player
 
         private Vector2 GetAimDirection()
         {
-            var direction = _camera.ScreenToWorldPoint(_aimInput) - transform.position;
-            direction.z = 0f;
+            // var direction = _inputReader.InputType == InputType.Gamepad 
+            //     ? _aimInput
+            //     : (_camera.ScreenToWorldPoint(_aimInput) - transform.position).ToVector2();
+            var direction = (_camera.ScreenToWorldPoint(_aimInput) - transform.position).ToVector2();
 
             return direction.normalized;
         }
@@ -65,10 +66,11 @@ namespace Game.Player
         private void OnAim(Vector2 playerAimInput)
         {
             _aimInput = playerAimInput;
-            
-            
+
+
             if (_inputReader.InputType == InputType.Gamepad)
-                _aimInput += transform.position.ToVector2();
+                // _aimInput += transform.position.ToVector2();
+                _aimInput = _camera.WorldToScreenPoint(_aimInput + transform.position.ToVector2());
         }
     }
     

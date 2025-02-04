@@ -46,9 +46,9 @@ namespace Game.Input
             if (context.action.activeControl.device != _lastAimDevice)
             {
                 _lastAimDevice = context.action.activeControl.device;
-                InputType = _lastAimDevice is Gamepad
-                    ? InputType.Gamepad
-                    : InputType.Keyboard;
+                InputType = _lastAimDevice is Mouse
+                    ? InputType.Keyboard
+                    : InputType.Gamepad;
             }
 
             var direction = context.ReadValue<Vector2>();
