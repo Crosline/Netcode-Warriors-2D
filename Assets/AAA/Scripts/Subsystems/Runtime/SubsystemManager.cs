@@ -16,6 +16,7 @@ namespace Subsystems.Core
 
         private static List<Type> _subsystemTypes;
         private static List<GameSubsystem> _subsystems;
+        internal static List<GameSubsystem> Subsystems => _subsystems;
         internal static SubsystemManager Instance { get; private set; }
         
         
