@@ -6,7 +6,9 @@ namespace Subsystems.Core.Editor
 {
     public class SubsystemManagerDebugWindow : EditorWindow
     {
-        [MenuItem("AAA/Subsystems/Subsystem Manager Debug")]
+        private Vector2 _scrollPosition;
+
+        [MenuItem("AAA/Subsystems/Subsystem Debugger")]
         public static void ShowWindow()
         {
             GetWindow<SubsystemManagerDebugWindow>("Subsystem Debugger");
@@ -17,7 +19,24 @@ namespace Subsystems.Core.Editor
             if (SubsystemManager.Instance == null)
             {
                 GUILayout.Label("Subsystem Manager is not initialized.");
+
+                EditorGUILayout.Space();
+
+                if (GUILayout.Button("Force Initialize"))
+                {
+                    SubsystemManager.ForceInitialize_Editor();
+                }
+
                 return;
+            }
+
+            if (!Application.isPlaying)
+            {
+                GUILayout.Label("Subsystem Manager is initialized in Editor mode.");
+                if (GUILayout.Button("Force Delete"))
+                {
+                    SubsystemManager.ForceShutdown_Editor();
+                }
             }
 
             var subsystems = SubsystemManager.Subsystems;
@@ -26,18 +45,23 @@ namespace Subsystems.Core.Editor
                 GUILayout.Label("No subsystems registered.");
                 return;
             }
-            
-            
+
             GUILayout.Label("Registered Subsystems", EditorStyles.largeLabel);
+
+            GUILayout.BeginScrollView(_scrollPosition);
 
             foreach (var subsystem in subsystems)
             {
                 EditorGUILayout.Space();
-                EditorGUILayout.Space();
-                EditorGUILayout.Space();
+
+                GUILayout.BeginVertical("box");
                 GUILayout.Label(subsystem.GetType().Name, EditorStyles.boldLabel);
+                GUILayout.Box("", GUILayout.ExpandWidth(true), GUILayout.Height(1));
                 DisplayFields(subsystem);
+                GUILayout.EndVertical();
             }
+
+            GUILayout.EndScrollView();
         }
 
 
@@ -49,7 +73,7 @@ namespace Subsystems.Core.Editor
             var properties = obj.GetType()
                 .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             // var methods = obj.GetType()
-                // .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            // .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
             EditorGUILayout.Space();
             GUILayout.Label("Fields", EditorStyles.miniBoldLabel);

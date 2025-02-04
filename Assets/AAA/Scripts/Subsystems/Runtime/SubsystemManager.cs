@@ -18,12 +18,18 @@ namespace Subsystems.Core
         private static List<GameSubsystem> _subsystems;
         internal static List<GameSubsystem> Subsystems => _subsystems;
         internal static SubsystemManager Instance { get; private set; }
-        
-        
+
+
         public static TSubsystem TryGetInstanceWithoutError<TSubsystem>() where TSubsystem : GameSubsystem
         {
-            try { return TryGetInstance<TSubsystem>(); }
-            catch { return null; }
+            try
+            {
+                return TryGetInstance<TSubsystem>();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public static TSubsystem TryGetInstance<TSubsystem>() where TSubsystem : GameSubsystem
@@ -31,7 +37,7 @@ namespace Subsystems.Core
             var typeIndex = _subsystemTypes.IndexOf(typeof(TSubsystem));
             if (typeIndex == -1)
                 throw new ArgumentException($"Subsystem of type {typeof(TSubsystem)} not found");
-            
+
             return _subsystems[typeIndex] as TSubsystem;
         }
 
@@ -43,12 +49,12 @@ namespace Subsystems.Core
         private static bool TryRegister(Type type, GameSubsystem gameSubsystem)
         {
             if (_subsystemTypes.Contains(type)) return false;
-            
+
             _subsystems.Add(gameSubsystem);
             _subsystemTypes.Add(type);
             return true;
         }
-        
+
         public static bool TryUnregister<TSubsystem>(TSubsystem gameSubsystem) where TSubsystem : GameSubsystem
         {
             if (!_subsystemTypes.Contains(typeof(TSubsystem))) return false;
@@ -169,5 +175,31 @@ namespace Subsystems.Core
                 singleton.OnApplicationQuit();
             }
         }
+
+
+        #region Editor Callbacks
+
+#if UNITY_EDITOR
+        internal static void ForceInitialize_Editor()
+        {
+            if (Application.isPlaying) return;
+            if (Instance != null) return;
+            Initialize();
+
+            UnityEditor.EditorApplication.delayCall += () => Object.Destroy(_monoHelper.gameObject);
+
+            UnityEditor.EditorApplication.playModeStateChanged += _ => { OnApplicationQuit(); };
+        }
+
+        internal static void ForceShutdown_Editor()
+        {
+            if (Application.isPlaying) return;
+            if (Instance == null) return;
+
+            OnApplicationQuit();
+        }
+#endif
+
+        #endregion
     }
 }
