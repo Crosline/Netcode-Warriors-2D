@@ -1,12 +1,16 @@
 using System;
+using JetBrains.Annotations;
 using Subsystems;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Scripting;
 using UnityInputAction;
 using CallbackContext = UnityEngine.InputSystem.InputAction.CallbackContext;
 
 namespace Game.Input
 {
+    [Preserve]
+    [UsedImplicitly]
     public sealed class InputReader : GameSubsystem<InputReader>, Controls.IPlayerActions
     {
         public event Action<bool> OnPlayerPrimaryAttack;

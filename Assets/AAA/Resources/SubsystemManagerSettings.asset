@@ -15,3 +15,5 @@ MonoBehaviour:
   <Subsystems>k__BackingField:
   - assemblyQualifiedName: Game.Input.InputReader, Game, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+  - assemblyQualifiedName: Game.Projectile.ProjectileLauncher, Game, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null

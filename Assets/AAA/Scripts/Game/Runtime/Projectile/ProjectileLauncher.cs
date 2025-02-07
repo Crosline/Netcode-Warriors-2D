@@ -1,113 +1,54 @@
-﻿using Game.Input;
-using Unity.Netcode;
+﻿using System;
+using JetBrains.Annotations;
+using Subsystems;
 using UnityEngine;
-using SubsystemManager = Subsystems.Core.SubsystemManager;
+using UnityEngine.Scripting;
 
 namespace Game.Projectile
 {
-    public class ProjectileLauncher : NetworkBehaviour
+    [Preserve]
+    [UsedImplicitly]
+    public class ProjectileLauncher : GameSubsystem<ProjectileLauncher>
     {
-        [Header("References")]
-        [SerializeField]
-        private Transform _spawnPoint;
+        private ProjectileSettings _settings;
 
-        [SerializeField]
-        private Collider2D _playerCollider;
-
-        [SerializeField]
-        private ProjectileAuthor _serverPrefab;
-        [SerializeField]
-        private ProjectileAuthor _clientPrefab;
-
-        [Header("Settings")]
-        [SerializeField]
-        private float _projectileSpeed = 15f;
-
-        [SerializeField]
-        private float _fireRate = 1f;
-
-
-        private float _previousFireTime;
-
-        private InputReader _inputReader;
-
-        public override void OnNetworkSpawn()
+        public override void OnAwake()
         {
-            if (!IsOwner)
-                return;
-
-            // _inputReader = InputReader.Instance;
-            _inputReader = SubsystemManager.TryGetInstanceWithoutError<InputReader>();
-            _inputReader.OnPlayerPrimaryAttack += HandlePrimaryFire;
+            _settings = Resources.Load<ProjectileSettings>(nameof(ProjectileSettings));
         }
 
-        public override void OnNetworkDespawn()
+        public void SpawnProjectile_Client(Vector3 position, Vector3 direction, ProjectileType type, Collider2D ignoreCollider)
         {
-            if (!IsOwner)
-                return;
+            if (!_settings.ProjectileAuthors.TryGetValue(type, out var authorPair))
+                throw new Exception($"Projectile type {type} not found in settings");
 
-            _inputReader.OnPlayerPrimaryAttack -= HandlePrimaryFire;
+            SpawnProjectile(position, direction, authorPair.Client, ignoreCollider);
         }
 
-        private void HandlePrimaryFire(bool shouldFire)
+        public void SpawnProjectile_Server(Vector3 position, Vector3 direction, ProjectileType type, Collider2D ignoreCollider)
         {
-            if (!shouldFire)
-                return;
+            if (!_settings.ProjectileAuthors.TryGetValue(type, out var authorPair))
+                throw new Exception($"Projectile type {type} not found in settings");
 
-            if (Time.time < _previousFireTime + (1 / _fireRate))
-                return;
-
-
-            var position = _spawnPoint.position;
-            var direction = _spawnPoint.right * _spawnPoint.parent.localScale.x;
-            PrimaryFireHandler_ServerRpc(position, direction);
-
-            SpawnClientProjectile(position, direction);
-            
-            _previousFireTime = Time.time;
+            SpawnProjectile(position, direction, authorPair.Server, ignoreCollider);
         }
 
-        [ServerRpc]
-        private void PrimaryFireHandler_ServerRpc(Vector3 spawnPos, Vector3 direction)
+        private static void SpawnProjectile(Vector3 position, Vector3 direction, ProjectileAuthor prefab, Collider2D ignoreCollider)
         {
-            var projectileInstance = Instantiate(
-                _serverPrefab,
-                spawnPos,
+            var projectileInstance = UnityEngine.Object.Instantiate(
+                prefab,
+                position,
                 Quaternion.identity);
 
             projectileInstance.transform.up = direction;
 
-            Physics2D.IgnoreCollision(_playerCollider, projectileInstance.Collider2D);
-            SetProjectileSpeed(projectileInstance.Rigidbody2D);
-
-            SpawnClientProjectileResult_ClientRpc(spawnPos, direction);
+            Physics2D.IgnoreCollision(ignoreCollider, projectileInstance.Collider2D);
+            SetProjectileSpeed(projectileInstance);
         }
 
-        [ClientRpc]
-        private void SpawnClientProjectileResult_ClientRpc(Vector3 spawnPos, Vector3 direction)
+        private static void SetProjectileSpeed(ProjectileAuthor projectile)
         {
-            if (IsOwner)
-                return;
-
-            SpawnClientProjectile(spawnPos, direction);
-        }
-
-        private void SpawnClientProjectile(Vector3 spawnPos, Vector3 direction)
-        {
-            var projectileInstance = Instantiate(
-                _clientPrefab,
-                spawnPos,
-                Quaternion.identity);
-
-            projectileInstance.transform.up = direction;
-
-            Physics2D.IgnoreCollision(_playerCollider, projectileInstance.Collider2D);
-            SetProjectileSpeed(projectileInstance.Rigidbody2D);
-        }
-
-        private void SetProjectileSpeed(Rigidbody2D rb)
-        {
-            rb.linearVelocity = rb.transform.up * _projectileSpeed;
+            projectile.Rigidbody2D.linearVelocity = projectile.Rigidbody2D.transform.up * projectile.Speed;
         }
     }
 }

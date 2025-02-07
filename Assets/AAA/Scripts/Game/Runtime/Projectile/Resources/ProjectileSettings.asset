@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0508850dd7744a0b322e31a057dd57a, type: 3}
+  m_Name: ProjectileSettings
+  m_EditorClassIdentifier: 
+  <ProjectileAuthors>k__BackingField:
+    Items:
+    - Key: 1
+      Value:
+        Client: {fileID: 7746771603421221215, guid: 8259101861dcc844f974ec24f247c0aa, type: 3}
+        Server: {fileID: 7852923841242239935, guid: fb54113f9b97c3143a536e7ad7d271bd, type: 3}

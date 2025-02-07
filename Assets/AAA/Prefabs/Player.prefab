@@ -184,15 +184,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 418341959450593272}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5af9253a7a84f9a843d3e048e8c757b, type: 3}
+  m_Script: {fileID: 11500000, guid: 36ec1d9f7fac4e0b8103c7b5f7329b82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _spawnPoint: {fileID: 8905567465094522250}
   _playerCollider: {fileID: 5644765932279599054}
-  _serverPrefab: {fileID: 7852923841242239935, guid: fb54113f9b97c3143a536e7ad7d271bd, type: 3}
-  _clientPrefab: {fileID: 7746771603421221215, guid: 8259101861dcc844f974ec24f247c0aa, type: 3}
-  _projectileSpeed: 10
+  _projectileType: 1
   _fireRate: 1
 --- !u!1 &721546626638950899
 GameObject:
