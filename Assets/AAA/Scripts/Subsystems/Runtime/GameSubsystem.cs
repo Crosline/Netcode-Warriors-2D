@@ -1,5 +1,5 @@
 ﻿using System;
-using Serializables;
+using UnityEngine.Scripting;
 
 namespace Subsystems
 {
@@ -12,6 +12,9 @@ namespace Subsystems
             Instance ??= this as T;
         }
 
+        
+        
+        
         public override void Shutdown()
         {
             if (Instance != this) return;
