@@ -69,7 +69,8 @@ namespace Game.Player
         [ServerRpc]
         private void PrimaryFireHandler_ServerRpc(Vector3 position, Vector3 direction)
         {
-            _projectileLauncher.SpawnProjectile_Server(position, direction, _projectileType, _playerCollider);
+            SubsystemManager.TryGetInstance<ProjectileLauncher>()
+                .SpawnProjectile_Server(position, direction, _projectileType, _playerCollider);
 
             SpawnClientProjectileResult_ClientRpc(position, direction);
         }
@@ -80,7 +81,8 @@ namespace Game.Player
             if (IsOwner)
                 return;
 
-            _projectileLauncher.SpawnProjectile_Client(position, direction, _projectileType, _playerCollider);
+            SubsystemManager.TryGetInstance<ProjectileLauncher>()
+                .SpawnProjectile_Client(position, direction, _projectileType, _playerCollider);
         }
     }
 }
