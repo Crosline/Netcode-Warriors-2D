@@ -16,8 +16,8 @@ MonoBehaviour:
     Items:
     - Key: 0
       Value:
-        Client: {fileID: 7746771603421221215, guid: 8259101861dcc844f974ec24f247c0aa, type: 3}
-        Server: {fileID: 7852923841242239935, guid: fb54113f9b97c3143a536e7ad7d271bd, type: 3}
+        Client: {fileID: 0}
+        Server: {fileID: 0}
     - Key: 1
       Value:
         Client: {fileID: 7746771603421221215, guid: 8259101861dcc844f974ec24f247c0aa, type: 3}
