@@ -1,32 +1,34 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Serializables
 {
     [Serializable]
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
+
     public class SerializableType<T> : ISerializationCallbackReceiver
     {
         [SerializeField]
-        private string assemblyQualifiedName = string.Empty;
+        [FormerlySerializedAs("assemblyQualifiedName")] 
+        private string AssemblyQualifiedName = string.Empty;
 
         public TypeInfo TypeInfo;
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
-            if (TypeInfo == null)
-            {
-                TypeInfo = typeof(T).GetTypeInfo();
-            }
-            
-            assemblyQualifiedName = TypeInfo.AssemblyQualifiedName;
+            TypeInfo ??= typeof(T).GetTypeInfo();
+
+            AssemblyQualifiedName = TypeInfo.AssemblyQualifiedName;
         }
 
         void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
-            if (string.IsNullOrWhiteSpace(assemblyQualifiedName)) return;
+            if (string.IsNullOrWhiteSpace(AssemblyQualifiedName)) return;
 
-            var type = Type.GetType(assemblyQualifiedName);
+            var type = Type.GetType(AssemblyQualifiedName);
             
             if (type == null) return;
 
