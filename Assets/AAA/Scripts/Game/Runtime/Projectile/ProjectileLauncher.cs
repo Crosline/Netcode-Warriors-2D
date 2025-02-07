@@ -44,6 +44,7 @@ namespace Game.Projectile
 
             Physics2D.IgnoreCollision(ignoreCollider, projectileInstance.Collider2D);
             SetProjectileSpeed(projectileInstance);
+            UnityEngine.Object.Destroy(projectileInstance.gameObject, projectileInstance.Lifetime);
         }
 
         private static void SetProjectileSpeed(ProjectileAuthor projectile)

@@ -111,3 +111,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Collider2D>k__BackingField: {fileID: 9095642968572430122}
   <Rigidbody2D>k__BackingField: {fileID: 1507894790748155544}
+  <Speed>k__BackingField: 10
+  <Lifetime>k__BackingField: 7
