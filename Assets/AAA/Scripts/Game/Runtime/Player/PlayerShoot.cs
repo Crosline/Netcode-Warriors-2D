@@ -28,16 +28,18 @@ namespace Game.Player
         private InputReader _inputReader;
         private ProjectileLauncher _projectileLauncher;
 
+        protected override void OnNetworkPreSpawn(ref NetworkManager networkManager)
+        {
+            _inputReader ??= SubsystemManager.TryGetInstance<InputReader>();
+            _projectileLauncher ??= SubsystemManager.TryGetInstance<ProjectileLauncher>();
+        }
+
         public override void OnNetworkSpawn()
         {
             if (!IsOwner)
                 return;
 
-            // _inputReader = InputReader.Instance;
-            _inputReader = SubsystemManager.TryGetInstance<InputReader>();
             _inputReader.OnPlayerPrimaryAttack += HandlePrimaryFire;
-
-            _projectileLauncher = SubsystemManager.TryGetInstance<ProjectileLauncher>();
         }
 
         public override void OnNetworkDespawn()
@@ -69,7 +71,7 @@ namespace Game.Player
         [ServerRpc]
         private void PrimaryFireHandler_ServerRpc(Vector3 position, Vector3 direction)
         {
-            SubsystemManager.TryGetInstance<ProjectileLauncher>()
+            _projectileLauncher
                 .SpawnProjectile_Server(position, direction, _projectileType, _playerCollider);
 
             SpawnClientProjectileResult_ClientRpc(position, direction);
@@ -81,7 +83,7 @@ namespace Game.Player
             if (IsOwner)
                 return;
 
-            SubsystemManager.TryGetInstance<ProjectileLauncher>()
+            _projectileLauncher
                 .SpawnProjectile_Client(position, direction, _projectileType, _playerCollider);
         }
     }

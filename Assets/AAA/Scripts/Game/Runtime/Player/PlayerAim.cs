@@ -17,13 +17,16 @@ namespace Game.Player
         private Camera _camera;
 
         #region Life Cycle
-
+        protected override void OnNetworkPreSpawn(ref NetworkManager networkManager)
+        {
+            _inputReader = SubsystemManager.TryGetInstanceWithoutError<InputReader>();
+        }
+        
         public override void OnNetworkSpawn()
         {
             if (!IsOwner) return;
 
             // _inputReader = InputReader.Instance;
-            _inputReader = SubsystemManager.TryGetInstanceWithoutError<InputReader>();
             _inputReader.OnPlayerAim += OnAim;
 
             _camera = Camera.main;

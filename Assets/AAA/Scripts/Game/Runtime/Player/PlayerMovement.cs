@@ -20,13 +20,17 @@ namespace Game.Player
 
         #region Life Cycle
 
+        protected override void OnNetworkPreSpawn(ref NetworkManager networkManager)
+        {
+            _inputReader = SubsystemManager.TryGetInstanceWithoutError<InputReader>();
+        }
+
         public override void OnNetworkSpawn()
         {
             if (!IsOwner) return;
 
             _rigidbody ??= GetComponent<Rigidbody2D>();
             // _inputReader = InputReader.Instance;
-            _inputReader = SubsystemManager.TryGetInstanceWithoutError<InputReader>();
             _inputReader.OnPlayerMove += OnPlayerMovement;
         }
 
